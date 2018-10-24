@@ -6,90 +6,59 @@ using System.Threading.Tasks;
 
 namespace Mastermind
 {
-    enum Colour
-    {
-        Red,
-        Blue,
-        Green,
-        Purple,
-        Yellow,
-        White
-    }
-
-    class Mastermind
-    {
-        public int GuessesLeft { get; set; } = 10;
-        public bool IsWinner { get; set; } = false;
-        private Colour[] Sequence { get; set; } = new Colour[4];
-        public Mastermind()
-        {
-            for (int i = 0; i < Sequence.Length; i++)
-            {
-                var rand = new Random(DateTime.Now.Millisecond);
-                Sequence[i] = (Colour)rand.Next(0, Enum.GetValues(typeof(Colour)).Length);
-            }
-        }
-
-        public Tuple<int, int> TryGuess(Colour[] guess)
-        {
-            int correctColors = 0, correctColorPlacements = 0;
-
-            var seq = Sequence.ToList();
-
-            for (int i = 0; i < Sequence.Length; i++)
-            {
-                if (seq.Contains(guess[i]))
-                {
-                    correctColors++;
-                    seq.Remove(guess[i]);
-                }
-
-                if (Sequence[i] == guess[i])
-                {
-                    correctColorPlacements++;
-                }
-            }
-
-            GuessesLeft--;
-            if (correctColorPlacements == 4)
-                IsWinner = true;
-            return new Tuple<int, int>(correctColors, correctColorPlacements);
-        }
-    }
-
     class Program
     {
-
-
         static void Main(string[] args)
         {
             var game = new Mastermind();
 
-            while (!game.IsWinner && game.GuessesLeft != 0)
+            while (!game.IsWinner && game.GuessesLeft != 0 && !game.GameEnded)
             {
                 Console.WriteLine("Red = 0, Blue = 1, Green = 2, Purple = 3, Yellow = 4, White = 5");
+                Console.Write("Input guess: ");
                 var input = Console.ReadLine();
-
-                Colour[] guess = new Colour[4];
-
-                for (int i = 0; i < guess.Length; i++)
+                try
                 {
-                    guess[i] = (Colour)int.Parse(input[i].ToString());
+                    var guess = ConvertInputToGuess(input);
+                    var result = game.TryGuess(guess);
+                    
+                    Console.WriteLine(Environment.NewLine + (game.IsWinner
+                        ? "GG EZ"
+                        : $"Correct colours: {result.Item1}    Correct placements: {result.Item2}    Guesses left: {game.GuessesLeft}"));
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(e.Message);
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
 
-                var result = game.TryGuess(guess);
-                if (game.IsWinner)
-                {
-                    Console.WriteLine("GG EZ");
-                }
-                else
-                {
-                    Console.WriteLine($"correct colours: {result.Item1}    correct placements: {result.Item2}    guesses left: {game.GuessesLeft}");
-                }
                 Console.WriteLine();
             }
 
+            var answer = "";
+            foreach (var colour in game.Sequence)
+            {
+                answer += colour.ToString() +" ";
+            }
+
+            Console.WriteLine($"Game Over! The correct sequence was {answer} ");
+
             Console.ReadKey();
+        }
+
+        private static Colour[] ConvertInputToGuess(string input)
+        {
+
+            var guess = new Colour[input.Length];
+            for (int i = 0; i < input.Length; i++)
+            {
+                var convertSuccess = int.TryParse(input[i].ToString(), out var convertedInput);
+
+                guess[i] = !convertSuccess ? throw new GuessInvalidException($"'{input[i]}' is not a valid input") : (Colour)convertedInput;
+            }
+
+            return guess;
         }
     }
 }
