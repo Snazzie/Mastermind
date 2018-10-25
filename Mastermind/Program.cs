@@ -10,41 +10,44 @@ namespace Mastermind
     {
         static void Main(string[] args)
         {
-            var game = new Mastermind();
-
-            while (!game.IsWinner && game.GuessesLeft != 0 && !game.GameEnded)
+            while (true)
             {
-                Console.WriteLine("Red = 0, Blue = 1, Green = 2, Purple = 3, Yellow = 4, White = 5");
-                Console.Write("Input guess: ");
-                var input = Console.ReadLine();
-                try
+                var game = new Mastermind();
+                while (!game.IsWinner && game.GuessesLeft != 0 && !game.GameEnded)
                 {
-                    var guess = ConvertInputToGuess(input);
-                    var result = game.TryGuess(guess);
-                    
-                    Console.WriteLine(Environment.NewLine + (game.IsWinner
-                        ? "GG EZ"
-                        : $"Correct colours: {result.Item1}    Correct placements: {result.Item2}    Guesses left: {game.GuessesLeft}"));
+                    Console.WriteLine("Red = 0, Blue = 1, Green = 2, Purple = 3, Yellow = 4, White = 5");
+                    Console.Write("Input guess: ");
+                    var input = Console.ReadLine();
+                    try
+                    {
+                        var guess = ConvertInputToGuess(input);
+                        var result = game.TryGuess(guess);
+
+                        Console.WriteLine(Environment.NewLine + (game.IsWinner
+                            ? "GG EZ"
+                            : $"Correct colours: {result.Item1}    Correct placements: {result.Item2}    Guesses left: {game.GuessesLeft}"));
+                    }
+                    catch (Exception e)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(e.Message);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+
+                    Console.WriteLine();
                 }
-                catch (Exception e)
+
+                var answer = "";
+                foreach (var colour in game.Sequence)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(e.Message);
-                    Console.ForegroundColor = ConsoleColor.White;
+                    answer += colour + " ";
                 }
 
-                Console.WriteLine();
+                Console.WriteLine($"Game Over! The correct sequence was {answer}");
+
+                Console.ReadKey();
+                Console.Clear();
             }
-
-            var answer = "";
-            foreach (var colour in game.Sequence)
-            {
-                answer += colour.ToString() +" ";
-            }
-
-            Console.WriteLine($"Game Over! The correct sequence was {answer} ");
-
-            Console.ReadKey();
         }
 
         private static Colour[] ConvertInputToGuess(string input)

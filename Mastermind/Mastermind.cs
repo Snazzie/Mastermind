@@ -22,11 +22,11 @@ namespace Mastermind
         public bool GameEnded { get; private set; }
         public Mastermind()
         {
+            var rand = new Random(DateTime.Now.Millisecond);
             _sequence = new Colour[4];
             for (int i = 0; i < _sequence.Length; i++)
             {
-                var rand = new Random(DateTime.Now.Millisecond);
-                _sequence[i] = (Colour)rand.Next(0, Enum.GetValues(typeof(Colour)).Length);
+                _sequence[i] = (Colour)rand.Next(0, Enum.GetValues(typeof(Colour)).Length - 1);
             }
         }
 
@@ -37,14 +37,15 @@ namespace Mastermind
             ValidateGuess(guess);
 
             GuessesLeft--;
+
             if (IsGuessCorrect(guess, _sequence, out var hint))
             {
                 GameEnded = true;
                 IsWinner = true;
             }
-                
+
             if (GuessesLeft < 1)
-                GameEnded = true;
+                EndGame();
             return hint;
         }
 
