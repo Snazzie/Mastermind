@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Mastermind
 {
     class Program
@@ -20,10 +19,11 @@ namespace Mastermind
                     var input = Console.ReadLine();
                     try
                     {
-                        var guess = ConvertInputToGuess(input);
+                        var guess = ConvertInputToGuess.Convert(input);
                         var result = game.TryGuess(guess);
 
-                        Console.WriteLine(Environment.NewLine + (game.IsWinner
+                        Console.WriteLine(Environment.NewLine +
+                            (game.IsWinner
                             ? "GG EZ"
                             : $"Correct colours: {result.Item1}    Correct placements: {result.Item2}    Guesses left: {game.GuessesLeft}"));
                     }
@@ -50,18 +50,5 @@ namespace Mastermind
             }
         }
 
-        private static Colour[] ConvertInputToGuess(string input)
-        {
-
-            var guess = new Colour[input.Length];
-            for (int i = 0; i < input.Length; i++)
-            {
-                var convertSuccess = int.TryParse(input[i].ToString(), out var convertedInput);
-
-                guess[i] = !convertSuccess ? throw new GuessInvalidException($"'{input[i]}' is not a valid input") : (Colour)convertedInput;
-            }
-
-            return guess;
-        }
     }
 }

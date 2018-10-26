@@ -6,24 +6,23 @@ namespace Mastermind
     public class Mastermind
     {
         public int GuessesLeft { get; private set; } = 10;
-        public bool IsWinner { get; private set; } = false;
-        private readonly Colour[] _sequence;
+        public bool IsWinner { get; private set; }
+        public bool GameEnded { get; private set; }
         public Colour[] Sequence
         {
             get
             {
                 if (GameEnded)
                     return _sequence;
-
                 throw new AccessViolationException("Game must be over to be able to see answer!");
             }
         }
+        private readonly Colour[] _sequence = new Colour[4];
 
-        public bool GameEnded { get; private set; }
+
         public Mastermind()
         {
             var rand = new Random(DateTime.Now.Millisecond);
-            _sequence = new Colour[4];
             for (int i = 0; i < _sequence.Length; i++)
             {
                 _sequence[i] = (Colour)rand.Next(0, Enum.GetValues(typeof(Colour)).Length - 1);
