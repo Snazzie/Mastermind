@@ -42,5 +42,6 @@ namespace MastermindTests
         {
             Assert.Throws<GuessInvalidException>(() => MastermindGame.TryGuess(guess));
         }
+
     }
 }

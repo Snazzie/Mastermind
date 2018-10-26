@@ -1,4 +1,6 @@
-﻿namespace Mastermind
+﻿using System;
+
+namespace Mastermind
 {
     public class ConvertInputToGuess
     {
@@ -9,7 +11,7 @@
             {
                 var convertSuccess = int.TryParse(input[i].ToString(), out var convertedInput);
 
-                guess[i] = !convertSuccess ? throw new GuessInvalidException($"'{input[i]}' is not a number") : (Colour)convertedInput;
+                guess[i] = !convertSuccess ? throw new ArgumentException($"'{input[i]}' is not a number") : (Colour)convertedInput;
             }
 
             return guess;

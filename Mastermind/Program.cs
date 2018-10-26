@@ -38,7 +38,7 @@ namespace Mastermind
                 }
 
                 var answer = "";
-                foreach (var colour in game.Sequence)
+                foreach (var colour in game.Sequence.Value)
                 {
                     answer += colour + " ";
                 }

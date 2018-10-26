@@ -49,8 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Colour.cs" />
+    <Compile Include="CustomExceptions.cs" />
+    <Compile Include="IMastermind.cs" />
+    <Compile Include="Sequence.cs" />
     <Compile Include="ConvertInputToGuess.cs" />
+    <Compile Include="ISequence.cs" />
     <Compile Include="Mastermind.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
